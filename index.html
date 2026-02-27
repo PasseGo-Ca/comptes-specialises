@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Comptes Spécialisés — PasseGo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap');
+:root{
+  --bg:#fff;--bg2:#f8fafc;--bg3:#f1f5f9;
+  --accent:#3b82f6;--accent2:#6366f1;--accent3:#8b5cf6;
+  --green:#10b981;--green-bg:rgba(16,185,129,.08);--green-border:rgba(16,185,129,.3);
+  --yellow:#f59e0b;--yellow-bg:rgba(245,158,11,.08);--yellow-border:rgba(245,158,11,.3);
+  --red:#ef4444;--red-bg:rgba(239,68,68,.08);--red-border:rgba(239,68,68,.3);
+  --blue-bg:rgba(59,130,246,.08);--blue-border:rgba(59,130,246,.3);
+  --text:#0f172a;--text2:#475569;--border:rgba(0,0,0,.08);--muted:#94a3b8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+.scroll-target{scroll-margin-top:70px;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;overflow-x:hidden;}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:none;}
+.stagger>*{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.stagger.visible>*:nth-child(1){opacity:1;transform:none;transition-delay:.05s;}
+.stagger.visible>*:nth-child(2){opacity:1;transform:none;transition-delay:.12s;}
+.stagger.visible>*:nth-child(3){opacity:1;transform:none;transition-delay:.19s;}
+.stagger.visible>*:nth-child(4){opacity:1;transform:none;transition-delay:.26s;}
+.stagger.visible>*:nth-child(5){opacity:1;transform:none;transition-delay:.33s;}
+.stagger.visible>*:nth-child(6){opacity:1;transform:none;transition-delay:.40s;}
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent3));z-index:300;transition:width .1s;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--accent);}
+.nav-menu-btn{display:none;background:none;border:none;cursor:pointer;padding:6px;}
+.nav-menu-btn span{display:block;width:20px;height:2px;background:var(--text);margin:4px 0;border-radius:2px;}
+.mobile-menu{display:none;position:fixed;top:52px;left:0;right:0;background:#fff;border-bottom:1px solid var(--border);z-index:190;padding:12px 0;box-shadow:0 8px 24px rgba(0,0,0,.08);}
+.mobile-menu a{display:block;padding:10px 24px;font-size:13px;font-weight:600;color:var(--text2);text-decoration:none;}
+.mobile-menu.open{display:block;}
+@media(min-width:701px){
+  .nav-links{display:flex;gap:4px;}
+  .nav-links a{font-size:11px;font-weight:600;color:var(--text2);text-decoration:none;padding:5px 10px;border-radius:8px;transition:.2s;}
+  .nav-links a:hover{background:var(--blue-bg);color:var(--accent);}
+}
+@media(max-width:700px){.nav-links{display:none;}.nav-menu-btn{display:block;}}
+.cover{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 24px 60px;text-align:center;position:relative;overflow:hidden;}
+.cover-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(99,102,241,.07),transparent 70%);}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(99,102,241,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,.04) 1px,transparent 1px);background-size:50px 50px;}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);animation:float 8s ease-in-out infinite;}
+.orb1{width:300px;height:300px;background:rgba(99,102,241,.06);top:-80px;left:-80px;}
+.orb2{width:250px;height:250px;background:rgba(139,92,246,.05);bottom:-40px;right:-40px;animation-delay:-4s;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-20px);}}
+.cover-badge{position:relative;z-index:2;display:inline-flex;align-items:center;gap:8px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.3);color:var(--accent2);padding:7px 18px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;animation:fadeDown .8s ease .2s both;}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent2);animation:pulse 2s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.8);}}
+.cover h1{position:relative;z-index:2;font-family:'Playfair Display',serif;font-size:clamp(38px,10vw,80px);font-weight:900;line-height:1.05;background:linear-gradient(135deg,#1e3a8a 0%,#6366f1 40%,#8b5cf6 70%,#a78bfa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;animation:fadeUp .9s ease .4s both;}
+.cover-sub{position:relative;z-index:2;font-size:15px;color:var(--text2);margin-bottom:40px;font-style:italic;animation:fadeUp .9s ease .5s both;}
+.cover-tags{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:48px;animation:fadeUp .9s ease .6s both;}
+.cover-tag{background:rgba(0,0,0,.03);border:1px solid var(--border);padding:7px 14px;border-radius:8px;font-size:11px;color:var(--text2);font-weight:500;}
+.cover-meta{position:relative;z-index:2;font-size:10px;color:var(--muted);letter-spacing:1.5px;}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.scroll-ind{position:relative;z-index:2;margin-top:28px;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;}
+.scroll-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--accent2),transparent);animation:scrollPulse 2s ease infinite;}
+@keyframes scrollPulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+.content-section{padding:72px 24px;border-top:1px solid var(--border);}
+.content-section:nth-child(odd){background:var(--bg);}
+.content-section:nth-child(even){background:var(--bg2);}
+.inner{max-width:800px;margin:0 auto;}
+.section-label{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.section-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:40px;}
+.section-num{font-size:60px;font-weight:900;line-height:1;font-family:'Playfair Display',serif;flex-shrink:0;background:linear-gradient(135deg,rgba(99,102,241,.25),rgba(139,92,246,.15));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.section-head-text h2{font-family:'Playfair Display',serif;font-size:clamp(24px,5vw,34px);color:var(--text);font-weight:800;}
+.section-head-text .en{font-size:12px;color:var(--muted);font-style:italic;margin-top:4px;}
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:18px;}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;color:var(--text2);}
+.card p{color:var(--text2);font-size:13px;margin-bottom:8px;}
+.card p:last-child{margin-bottom:0;}
+.principle{background:var(--blue-bg);border:1px solid var(--blue-border);border-left:3px solid var(--accent);border-radius:12px;padding:20px 22px;margin:20px 0;}
+.principle .label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+.principle p{color:var(--text);font-size:13px;}
+.rule{background:var(--red-bg);border:1px solid var(--red-border);border-left:3px solid var(--red);border-radius:12px;padding:18px 20px;margin:18px 0;}
+.rule .label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:6px;}
+.rule p{color:var(--text2);font-size:13px;}
+.tip{background:var(--green-bg);border:1px solid var(--green-border);border-left:3px solid var(--green);border-radius:12px;padding:18px 20px;margin:18px 0;}
+.tip .label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:6px;}
+.tip p{color:var(--text2);font-size:13px;}
+.warn{background:var(--yellow-bg);border:1px solid var(--yellow-border);border-left:3px solid var(--yellow);border-radius:12px;padding:18px 20px;margin:18px 0;}
+.warn .label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);margin-bottom:6px;}
+.warn p{color:var(--text2);font-size:13px;}
+.account-card{border-radius:18px;padding:24px;margin-bottom:20px;border:1px solid;}
+.account-card.teal{background:rgba(20,184,166,.05);border-color:rgba(20,184,166,.25);}
+.account-card.rose{background:rgba(244,63,94,.05);border-color:rgba(244,63,94,.25);}
+.account-card.amber{background:rgba(245,158,11,.05);border-color:rgba(245,158,11,.25);}
+.account-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.account-emoji{font-size:28px;}
+.account-name{font-size:18px;font-weight:800;}
+.account-card.teal .account-name{color:#0d9488;}
+.account-card.rose .account-name{color:#e11d48;}
+.account-card.amber .account-name{color:#d97706;}
+.account-subtitle{font-size:12px;color:var(--text2);}
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
+@media(min-width:480px){.stat-grid{grid-template-columns:repeat(4,1fr);}}
+.stat{background:rgba(255,255,255,.7);border-radius:10px;padding:12px;text-align:center;}
+.stat-val{font-size:16px;font-weight:800;color:var(--text);font-family:'Playfair Display',serif;}
+.stat-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);margin-top:2px;}
+.analogy-box{background:rgba(255,255,255,.6);border-radius:10px;padding:14px 16px;margin:12px 0;border:1px solid rgba(255,255,255,.8);}
+.analogy-box .analogy-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.analogy-box p{font-size:13px;color:var(--text2);}
+.tbl-wrap{overflow-x:auto;margin:22px 0;border-radius:12px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;background:var(--bg);}
+thead tr{background:rgba(99,102,241,.05);}
+th{padding:12px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent2);border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:11px 14px;font-size:12px;color:var(--text2);border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+td strong{color:var(--text);}
+.badge-win{color:#059669;font-weight:700;}
+.badge-lose{color:#dc2626;font-weight:700;}
+.badge-warn{color:#d97706;font-weight:700;}
+.badge-ess{color:#7c3aed;font-weight:700;}
+.order-steps{display:flex;flex-direction:column;gap:12px;margin:22px 0;}
+.order-step{display:flex;gap:16px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:18px;transition:border-color .25s,transform .25s;}
+.order-step:hover{border-color:rgba(99,102,241,.3);transform:translateX(3px);}
+.order-step-num{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0;color:#fff;}
+.order-step-content h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.order-step-content p{font-size:12px;color:var(--text2);}
+.toc-section{padding:72px 24px;border-top:1px solid var(--border);background:var(--bg2);}
+.toc-inner{max-width:800px;margin:0 auto;}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(28px,6vw,40px);font-weight:800;margin-bottom:40px;color:var(--text);}
+.toc-grid{display:grid;grid-template-columns:1fr;gap:10px;}
+@media(min-width:500px){.toc-grid{grid-template-columns:repeat(2,1fr);}}
+a.toc-item{text-decoration:none;color:inherit;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;align-items:flex-start;gap:12px;transition:.25s;}
+a.toc-item:hover{border-color:rgba(99,102,241,.4);box-shadow:0 6px 20px rgba(99,102,241,.08);transform:translateY(-2px);}
+.toc-num{font-size:10px;font-weight:800;color:var(--accent2);background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.3);border-radius:7px;padding:3px 8px;flex-shrink:0;}
+.toc-text strong{display:block;font-size:12px;color:var(--text);margin-bottom:1px;}
+.toc-text span{font-size:11px;color:var(--text2);}
+.quiz-box{background:var(--bg);border:2px solid rgba(99,102,241,.3);border-radius:18px;padding:24px;margin:24px 0;}
+.quiz-title{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent2);margin-bottom:6px;}
+.quiz-question{font-size:15px;font-weight:700;color:var(--text);margin-bottom:18px;line-height:1.5;}
+.quiz-options{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:13px 16px;font-size:13px;color:var(--text2);cursor:pointer;text-align:left;transition:.2s;width:100%;font-family:inherit;}
+.quiz-opt:hover{border-color:var(--accent2);color:var(--text);}
+.quiz-opt.correct{background:rgba(16,185,129,.1);border-color:#10b981;color:#059669;font-weight:600;}
+.quiz-opt.wrong{background:rgba(239,68,68,.08);border-color:#ef4444;color:#dc2626;}
+.quiz-feedback{margin-top:14px;padding:14px 16px;border-radius:12px;font-size:13px;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.ok{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:#059669;}
+.quiz-feedback.ko{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:#dc2626;}
+.quiz-next{margin-top:12px;background:linear-gradient(135deg,var(--accent2),var(--accent3));color:#fff;border:none;border-radius:100px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;display:none;font-family:inherit;}
+.quiz-next.show{display:inline-block;}
+.score-wrap{text-align:center;padding:20px;}
+.score-num{font-size:48px;font-weight:900;font-family:'Playfair Display',serif;color:var(--accent2);}
+.score-lbl{font-size:14px;color:var(--text2);margin-bottom:16px;}
+.score-msg{font-size:13px;color:var(--text2);background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.3);border-radius:10px;padding:12px 16px;margin-bottom:16px;}
+.quiz-restart{background:var(--bg3);border:1.5px solid var(--border);border-radius:100px;padding:8px 20px;font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;font-family:inherit;}
+.quiz-progress{display:flex;gap:6px;margin-bottom:16px;}
+.qdot{width:8px;height:8px;border-radius:50%;background:var(--border);}
+.qdot.done{background:var(--accent2);}
+.qdot.cur{background:var(--accent3);transform:scale(1.3);}
+.calc-box{background:var(--bg);border:2px solid rgba(99,102,241,.3);border-radius:18px;padding:24px;margin:24px 0;}
+.calc-title{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent2);margin-bottom:4px;}
+.calc-subtitle{font-size:13px;color:var(--text2);margin-bottom:20px;}
+.calc-row{margin-bottom:16px;}
+.calc-row label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2);display:block;margin-bottom:6px;}
+.calc-row input[type=range]{width:100%;accent-color:var(--accent2);}
+.cval{font-size:16px;font-weight:800;color:var(--accent2);font-family:'Playfair Display',serif;}
+.calc-result{background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(139,92,246,.05));border:1.5px solid rgba(99,102,241,.3);border-radius:14px;padding:18px;margin-top:16px;}
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.ri{text-align:center;}
+.rv{font-size:20px;font-weight:900;font-family:'Playfair Display',serif;color:var(--accent2);}
+.rl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);}
+.bar-row{margin-top:12px;}
+.bar-lbl{font-size:11px;color:var(--text2);margin-bottom:4px;display:flex;justify-content:space-between;}
+.bar{height:8px;border-radius:100px;background:var(--bg3);overflow:hidden;margin-bottom:8px;}
+.bar-fill{height:100%;border-radius:100px;transition:width .5s ease;}
+.flip-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0;}
+@media(min-width:500px){.flip-grid{grid-template-columns:repeat(3,1fr);}}
+.flip-card{height:130px;cursor:pointer;perspective:800px;}
+.flip-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .5s;}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+.flip-front,.flip-back{position:absolute;inset:0;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.flip-front{background:var(--bg3);border:1.5px solid var(--border);}
+.flip-back{background:linear-gradient(135deg,rgba(99,102,241,.06),rgba(139,92,246,.06));border:1.5px solid rgba(99,102,241,.3);transform:rotateY(180deg);}
+.fe{font-size:26px;margin-bottom:6px;}
+.ft{font-size:11px;font-weight:700;color:var(--text);text-align:center;}
+.fd{font-size:10px;color:var(--text2);text-align:center;line-height:1.4;}
+.subv-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0;}
+@media(min-width:600px){.subv-grid{grid-template-columns:1fr 1fr;}}
+.subv-card{border-radius:14px;padding:18px;border:1px solid;}
+.subv-card.fed{background:rgba(59,130,246,.05);border-color:rgba(59,130,246,.25);}
+.subv-card.prov{background:rgba(16,185,129,.05);border-color:rgba(16,185,129,.25);}
+.subv-card.reei-fed{background:rgba(99,102,241,.05);border-color:rgba(99,102,241,.25);}
+.subv-card.reei-bon{background:rgba(245,158,11,.05);border-color:rgba(245,158,11,.25);}
+.subv-icon{font-size:22px;margin-bottom:6px;}
+.subv-name{font-size:12px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.subv-amount{font-size:20px;font-weight:900;font-family:'Playfair Display',serif;margin-bottom:2px;}
+.subv-card.fed .subv-amount{color:#2563eb;}
+.subv-card.prov .subv-amount{color:#059669;}
+.subv-card.reei-fed .subv-amount{color:#6366f1;}
+.subv-card.reei-bon .subv-amount{color:#d97706;}
+.subv-desc{font-size:11px;color:var(--text2);}
+.ferr-table{margin:20px 0;}
+.footer{background:var(--bg2);border-top:1px solid var(--border);padding:56px 24px;text-align:center;}
+.footer-logo{font-size:12px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--accent2);margin-bottom:8px;}
+.footer p{font-size:11px;color:var(--muted);margin-bottom:5px;}
+.footer .disclaimer{max-width:560px;margin:22px auto 0;padding:16px 20px;background:rgba(0,0,0,.03);border:1px solid var(--border);border-radius:10px;font-size:10px;color:var(--muted);}
+.sim-diff{margin-top:12px;padding:12px 14px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:10px;text-align:center;}
+.sim-diff-lbl{font-size:11px;color:var(--text2);margin-bottom:4px;}
+.sim-diff-val{font-size:20px;font-weight:900;color:#059669;font-family:'Playfair Display',serif;}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav>
+  <div class="nav-logo">PasseGo · Comptes spécialisés</div>
+  <div class="nav-links">
+    <a href="#s1">REEE</a>
+    <a href="#s2">REEI</a>
+    <a href="#s3">FERR</a>
+    <a href="#s4">Comparatif</a>
+    <a href="#jeux">Quiz</a>
+  </div>
+  <button class="nav-menu-btn" id="menuBtn" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#s1">🎓 REEE</a>
+  <a href="#s2">❤️ REEI</a>
+  <a href="#s3">🏦 FERR</a>
+  <a href="#s4">📊 Comparatif</a>
+  <a href="#jeux">🎮 Quiz</a>
+</div>
+
+<section class="cover">
+  <div class="cover-bg"></div><div class="grid-bg"></div>
+  <div class="orb orb1"></div><div class="orb orb2"></div>
+  <div class="cover-badge"><span class="badge-dot"></span>Boîte à outils · Vol. 2</div>
+  <h1>Les comptes<br>spécialisés</h1>
+  <p class="cover-sub">REEE, REEI et FERR — épargner pour ses enfants,<br>protéger un proche, planifier sa retraite</p>
+  <div class="cover-tags">
+    <span class="cover-tag">REEE</span>
+    <span class="cover-tag">REEI</span>
+    <span class="cover-tag">FERR</span>
+    <span class="cover-tag">Subventions gouvernementales</span>
+    <span class="cover-tag">Planification retraite</span>
+  </div>
+  <div class="cover-meta">21 FÉVRIER 2026 · PASSEGO · REGIMERADAR</div>
+  <div class="scroll-ind"><span>Défiler</span><div class="scroll-line"></div></div>
+</section>
+
+<!-- TOC -->
+<section class="toc-section">
+  <div class="toc-inner">
+    <div class="section-label reveal">Navigation</div>
+    <h2 class="section-title reveal">Table des Matières</h2>
+    <div class="toc-grid stagger">
+      <a href="#s1" class="toc-item"><span class="toc-num">01</span><div class="toc-text"><strong>Le REEE</strong><span>Le compte pour vos enfants</span></div></a>
+      <a href="#s2" class="toc-item"><span class="toc-num">02</span><div class="toc-text"><strong>Le REEI</strong><span>Le filet de sécurité d'un proche</span></div></a>
+      <a href="#s3" class="toc-item"><span class="toc-num">03</span><div class="toc-text"><strong>Le FERR</strong><span>Le chèque de paie de la retraite</span></div></a>
+      <a href="#s4" class="toc-item"><span class="toc-num">04</span><div class="toc-text"><strong>Tableau comparatif</strong><span>Les trois comptes côte à côte</span></div></a>
+      <a href="#jeux" class="toc-item" style="border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.03);">
+        <span class="toc-num" style="background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:#059669;">🎮</span>
+        <div class="toc-text"><strong style="color:#059669;">Quiz et jeux interactifs</strong><span>Testez vos connaissances</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section class="content-section" style="background:var(--bg);">
+  <div class="inner">
+    <div class="principle reveal">
+      <div class="label">📚 La suite du Vol. 1</div>
+      <p>Dans notre premier guide, nous avons couvert les comptes essentiels — CELI, REER, CELIAPP et le compte non enregistré. Le système fiscal canadien offre trois autres comptes enregistrés qui répondent à des besoins de vie spécifiques : épargner pour les études de vos enfants, assurer l'avenir financier d'un proche vivant avec un handicap, et transformer vos épargnes en revenu de retraite. Ces comptes sont moins connus, mais pour les personnes qu'ils concernent, ils sont parmi les <strong>outils les plus généreux du gouvernement canadien.</strong></p>
+    </div>
+    <div class="card reveal">
+      <div class="card-title">🗓️ Des comptes conçus pour des moments précis</div>
+      <p>Chacun de ces comptes a été conçu pour un moment précis de la vie. Les comprendre, c'est être prêt quand ce moment arrive. Chaque année d'inaction peut représenter des milliers de dollars de subventions gouvernementales perdues à jamais.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REEE -->
+<section id="s1" class="content-section scroll-target">
+  <div class="inner">
+    <div class="section-header">
+      <div class="section-num reveal">01</div>
+      <div class="section-head-text reveal">
+        <div class="section-label">Régime enregistré d'épargne-études</div>
+        <h2>Le REEE</h2>
+        <div class="en">Registered Education Savings Plan (RESP)</div>
+      </div>
+    </div>
+    <p class="reveal" style="color:var(--text2);font-size:14px;margin-bottom:24px;line-height:1.8;">Le REEE est un compte enregistré qui permet aux parents, grands-parents ou toute autre personne d'épargner pour les études postsecondaires d'un enfant. Ce qui rend ce compte exceptionnel, c'est que le gouvernement <strong style="color:var(--text)">ajoute de l'argent au vôtre</strong>. Pour chaque dollar déposé jusqu'à 2 500 $ par année, le fédéral ajoute 20 % via la Subvention canadienne pour l'épargne-études (SCEE), et le Québec ajoute 10 % de plus via l'Incitatif québécois à l'épargne-études (IQEE). C'est un rendement instantané de 30 % sur vos 2 500 premiers dollars — avant même que l'argent soit investi. Aucun placement au monde ne vous offre ça.</p>
+
+    <div class="account-card teal reveal">
+      <div class="account-header">
+        <div class="account-emoji">🎓</div>
+        <div><div class="account-name">REEE</div><div class="account-subtitle">L'investissement qui rapporte 30 % — garanti par le gouvernement</div></div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-val">50 000 $</div><div class="stat-lbl">Plafond à vie / enfant</div></div>
+        <div class="stat"><div class="stat-val">500 $</div><div class="stat-lbl">SCEE fédérale / an</div></div>
+        <div class="stat"><div class="stat-val">250 $</div><div class="stat-lbl">IQEE Québec / an</div></div>
+        <div class="stat"><div class="stat-val">30 %</div><div class="stat-lbl">Rendement garanti*</div></div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-label">🌱 L'analogie</div>
+        <p>Imaginez que chaque fois que vous mettez 100 $ dans une tirelire pour votre enfant, un oncle généreux (Ottawa) ajoute 20 $ et une tante bienveillante (Québec) ajoute 10 $. Et tout ce que cet argent génère en investissements n'est jamais imposé tant qu'il reste dans la tirelire. Quand votre enfant en a besoin pour ses études, les retraits sont imposés dans <strong>SES</strong> mains — et comme il est étudiant, son taux d'imposition est généralement près de zéro.</p>
+      </div>
+    </div>
+
+    <div class="subv-grid reveal">
+      <div class="subv-card fed">
+        <div class="subv-icon">🇨🇦</div>
+        <div class="subv-name">SCEE — Fédéral</div>
+        <div class="subv-amount">500 $/an</div>
+        <div class="subv-desc">20 % sur 2 500 $ de cotisation. Plafond à vie de 7 200 $.</div>
+      </div>
+      <div class="subv-card prov">
+        <div class="subv-icon">⚜️</div>
+        <div class="subv-name">IQEE — Québec</div>
+        <div class="subv-amount">250 $/an</div>
+        <div class="subv-desc">10 % sur 2 500 $ de cotisation. Bonus pour faibles revenus.</div>
+      </div>
+    </div>
+
+    <h3 class="reveal" style="font-size:16px;font-weight:700;margin:32px 0 16px;">Les trois types de REEE</h3>
+    <div class="tbl-wrap reveal">
+      <table>
+        <thead><tr><th>Type</th><th>Avantages</th><th>Limites</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Individuel</strong></td>
+            <td>Un seul bénéficiaire. Simple à gérer. Transférable à un autre enfant. Flexible.</td>
+            <td>Un seul enfant à la fois. Si l'enfant ne fait pas d'études, subventions retournées.</td>
+          </tr>
+          <tr>
+            <td><strong>Familial</strong></td>
+            <td>Plusieurs enfants dans le même régime. Redistribution flexible entre frères/sœurs. Maximise les subventions.</td>
+            <td>Enfants doivent être liés par le sang ou adoption. Un peu plus complexe.</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#dc2626;">Collectif</strong></td>
+            <td>Géré en groupe.</td>
+            <td class="badge-lose">Frais élevés. Règles rigides. Pénalités si retrait anticipé. À ÉVITER.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tip reveal">
+      <div class="label">⚡ Notre recommandation</div>
+      <p>Ouvrez un REEE <strong>familial autogéré</strong> chez votre courtier en ligne (Wealthsimple, Questrade, Disnat). Cotisez <strong>2 500 $ par enfant par année</strong> pour capter le maximum de subventions. Investissez dans un FNB diversifié (XEQT ou VEQT si l'enfant est jeune). À mesure que l'enfant approche des études (5 ans avant), migrez graduellement vers des placements moins volatils.</p>
+    </div>
+
+    <div class="card reveal">
+      <div class="card-title">📅 Stratégie avancée : les cotisations rétroactives</div>
+      <p>Si vous n'avez pas cotisé les années précédentes, vous pouvez rattraper le retard. La SCEE permet de récupérer les droits inutilisés — mais un maximum de <strong style="color:var(--text)">1 000 $ de subvention fédérale par année</strong> (soit 5 000 $ de cotisation dans l'année courante). En cotisant 5 000 $ plutôt que 2 500 $, vous captez 500 $ pour l'année courante + 500 $ de rattrapage. C'est la stratégie optimale si vous commencez en retard.</p>
+    </div>
+
+    <div class="warn reveal">
+      <div class="label">❓ Et si mon enfant ne fait pas d'études?</div>
+      <p>Pas de panique. Vous pouvez <strong>transférer le REEE à un autre enfant</strong>, attendre (le REEE reste ouvert 36 ans), ou fermer le compte. En cas de fermeture : les subventions retournent au gouvernement, vos cotisations originales vous reviennent sans impôt, et les gains (PAE) peuvent être transférés à votre REER (jusqu'à 50 000 $) ou retirés en espèces avec impôt + 20 % de pénalité.</p>
+    </div>
+
+    <div class="calc-box reveal">
+      <div class="calc-title">🧮 Calculateur REEE</div>
+      <div class="calc-subtitle">Estimez la valeur de votre REEE à 18 ans, avec subventions</div>
+      <div class="calc-row">
+        <label>Cotisation annuelle : <span class="cval" id="reeeContVal">2 500 $</span></label>
+        <input type="range" min="500" max="5000" step="500" value="2500" id="reeeContInput">
+      </div>
+      <div class="calc-row">
+        <label>Âge actuel de l'enfant : <span class="cval" id="reeeAgeVal">0 an</span></label>
+        <input type="range" min="0" max="14" step="1" value="0" id="reeeAgeInput">
+      </div>
+      <div class="calc-row">
+        <label>Rendement annuel estimé : <span class="cval" id="reeeRateVal">6 %</span></label>
+        <input type="range" min="2" max="10" step="0.5" value="6" id="reeeRateInput">
+      </div>
+      <div class="calc-result">
+        <div class="rg">
+          <div class="ri"><div class="rv" id="reeeTotal">—</div><div class="rl">Valeur à 18 ans</div></div>
+          <div class="ri"><div class="rv" id="reeeSubv">—</div><div class="rl">Subventions reçues</div></div>
+        </div>
+        <div style="margin-top:12px;padding:10px 14px;background:rgba(20,184,166,.08);border:1px solid rgba(20,184,166,.3);border-radius:10px;text-align:center;">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">Vos cotisations</div>
+          <div style="font-size:20px;font-weight:900;color:#0d9488;font-family:'Playfair Display',serif;" id="reeeContTot">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REEI -->
+<section id="s2" class="content-section scroll-target">
+  <div class="inner">
+    <div class="section-header">
+      <div class="section-num reveal">02</div>
+      <div class="section-head-text reveal">
+        <div class="section-label">Régime enregistré d'épargne-invalidité</div>
+        <h2>Le REEI</h2>
+        <div class="en">Registered Disability Savings Plan (RDSP)</div>
+      </div>
+    </div>
+    <p class="reveal" style="color:var(--text2);font-size:14px;margin-bottom:24px;line-height:1.8;">Le REEI est un régime d'épargne à long terme conçu spécifiquement pour les personnes admissibles au crédit d'impôt pour personnes handicapées (CIPH). C'est possiblement le programme d'épargne le plus généreux au Canada : le gouvernement fédéral peut contribuer jusqu'à <strong style="color:var(--text)">300 % de vos cotisations</strong> via la Subvention canadienne pour l'épargne-invalidité, et fournir un Bon d'épargne-invalidité même si vous ne cotisez rien du tout. Oui — le gouvernement dépose de l'argent dans le compte même sans cotisation de votre part.</p>
+
+    <div class="account-card rose reveal">
+      <div class="account-header">
+        <div class="account-emoji">❤️</div>
+        <div><div class="account-name">REEI</div><div class="account-subtitle">Le compte le plus généreux et le moins connu du système fiscal</div></div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-val">200 000 $</div><div class="stat-lbl">Plafond à vie</div></div>
+        <div class="stat"><div class="stat-val">70 000 $</div><div class="stat-lbl">Subventions à vie</div></div>
+        <div class="stat"><div class="stat-val">20 000 $</div><div class="stat-lbl">Bons sans cotiser</div></div>
+        <div class="stat"><div class="stat-val">300 %</div><div class="stat-lbl">Taux de jumelage max.</div></div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-label">❤️ L'analogie</div>
+        <p>Le REEI, c'est comme si le gouvernement disait : <em>« Je sais que la vie avec un handicap coûte plus cher et que l'avenir financier est plus incertain. Alors voici le marché : pour chaque dollar que toi ou ta famille déposez, je peux en ajouter jusqu'à trois. Et même si personne ne peut cotiser, je vais quand même déposer jusqu'à 1 000 $ par année. »</em></p>
+      </div>
+    </div>
+
+    <div class="card reveal">
+      <div class="card-title">✅ Qui est admissible?</div>
+      <p>Pour ouvrir un REEI, le bénéficiaire doit être résident canadien, détenir un NAS, et être admissible au <strong style="color:var(--text)">crédit d'impôt pour personnes handicapées (CIPH)</strong>. Le CIPH est obtenu via le formulaire T2201, signé par un médecin et approuvé par l'ARC.</p>
+      <p>Point crucial : l'admissibilité couvre un large spectre — troubles physiques, mentaux, développementaux, psychologiques, cognitifs. Le CIPH n'est pas limité aux handicaps visibles. Il couvre aussi les troubles d'apprentissage sévères, la santé mentale, le diabète de type 1, et bien d'autres. <strong style="color:var(--text)">Si vous avez un proche qui pourrait être admissible, la demande vaut la peine d'être faite.</strong></p>
+    </div>
+
+    <h3 class="reveal" style="font-size:16px;font-weight:700;margin:32px 0 8px;">Les subventions du gouvernement</h3>
+    <p class="reveal" style="font-size:13px;color:var(--text2);margin-bottom:16px;">Deux volets distincts, tous deux extraordinairement généreux :</p>
+
+    <div class="subv-grid reveal">
+      <div class="subv-card reei-fed">
+        <div class="subv-icon">💰</div>
+        <div class="subv-name">SCEI — Subvention d'épargne-invalidité</div>
+        <div class="subv-amount">Jusqu'à 3 500 $/an</div>
+        <div class="subv-desc">Jumelage de 100 % à 300 % selon le revenu familial. Max. à vie : 70 000 $. Pour une cotisation de 1 500 $ (faibles revenus), le gouvernement ajoute 3 500 $.</div>
+      </div>
+      <div class="subv-card reei-bon">
+        <div class="subv-icon">🎁</div>
+        <div class="subv-name">BCEI — Bon d'épargne-invalidité</div>
+        <div class="subv-amount">Jusqu'à 1 000 $/an</div>
+        <div class="subv-desc">Sans cotisation requise. Automatique si revenu familial &lt; ~57 000 $. Max. à vie : 20 000 $. Il suffit d'ouvrir le compte et de produire ses impôts.</div>
+      </div>
+    </div>
+
+    <div class="rule reveal">
+      <div class="label">⚠️ La règle des 10 ans</div>
+      <p>Si vous retirez de l'argent dans les <strong>10 ans suivant la dernière subvention ou bon reçu</strong>, vous devez rembourser les subventions et bons reçus durant cette période (règle de l'assistance proportionnelle). Après 10 ans, les retraits peuvent commencer librement. Les retraits sont composés de vos cotisations (non imposables), de subventions/bons et de gains (imposables dans les mains du bénéficiaire).</p>
+    </div>
+
+    <div class="warn reveal">
+      <div class="label">⏰ Le facteur temps est critique</div>
+      <p>Le REEI doit être ouvert <strong>AVANT que le bénéficiaire atteigne 60 ans</strong>. Les subventions et bons sont disponibles jusqu'à la fin de l'année des <strong>49 ans</strong> du bénéficiaire. Plus vous ouvrez tôt, plus vous accumulez de subventions et plus la croissance composée joue en votre faveur. Chaque année perdue est une année de subventions perdues à jamais.</p>
+    </div>
+
+    <div class="tip reveal">
+      <div class="label">🛡️ Impact sur les prestations gouvernementales</div>
+      <p>L'argent dans un REEI <strong>n'affecte PAS</strong> l'admissibilité aux prestations provinciales d'aide sociale ni aux programmes fédéraux. Contrairement à l'épargne dans un compte bancaire ordinaire, qui peut réduire ou éliminer l'aide sociale, le REEI est un « abri » reconnu. C'est un outil extraordinairement bien conçu pour assurer la sécurité financière sans pénaliser le bénéficiaire.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FERR -->
+<section id="s3" class="content-section scroll-target">
+  <div class="inner">
+    <div class="section-header">
+      <div class="section-num reveal">03</div>
+      <div class="section-head-text reveal">
+        <div class="section-label">Fonds enregistré de revenu de retraite</div>
+        <h2>Le FERR</h2>
+        <div class="en">Registered Retirement Income Fund (RRIF)</div>
+      </div>
+    </div>
+    <p class="reveal" style="color:var(--text2);font-size:14px;margin-bottom:24px;line-height:1.8;">Le FERR n'est pas un nouveau compte — c'est la <strong style="color:var(--text)">suite de votre REER</strong>. Pendant toute votre vie active, vous avez cotisé à votre REER pour accumuler de l'épargne-retraite. Le FERR est l'étape où vous transformez cette épargne en revenu régulier. Pensez-y comme à un robinet : le REER était le réservoir que vous remplissiez, le FERR est le robinet que vous ouvrez pour en laisser couler un montant régulier chaque année.</p>
+
+    <div class="account-card amber reveal">
+      <div class="account-header">
+        <div class="account-emoji">🏦</div>
+        <div><div class="account-name">FERR</div><div class="account-subtitle">Quand vient le temps de transformer vos épargnes REER en revenus</div></div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-val">71 ans</div><div class="stat-lbl">Conversion obligatoire</div></div>
+        <div class="stat"><div class="stat-val">5,40 %</div><div class="stat-lbl">Retrait min. à 72 ans</div></div>
+        <div class="stat"><div class="stat-val">20 %</div><div class="stat-lbl">Retrait min. à 95+ ans</div></div>
+        <div class="stat"><div class="stat-val">∞</div><div class="stat-lbl">Pas de maximum</div></div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-label">⏳ L'analogie</div>
+        <p>Votre FERR, c'est comme un sablier retourné. Le sable (votre argent) doit couler — la question n'est pas <em>si</em>, mais <em>à quel rythme</em>. Le gouvernement fixe un rythme minimum qui accélère avec l'âge. À 72 ans, 5,4 % du sable doit couler. À 90 ans, c'est près de 14 %. À 95 ans et plus, un cinquième de ce qui reste doit sortir chaque année.</p>
+      </div>
+    </div>
+
+    <div class="card reveal">
+      <div class="card-title">⚙️ Comment ça fonctionne</div>
+      <p>La loi est simple et non négociable : au plus tard le <strong style="color:var(--text)">31 décembre de l'année de vos 71 ans</strong>, vous devez convertir votre REER en FERR (ou en rente viagère, ou le retirer en totalité — mais cette dernière option déclenche un impôt massif immédiat). La conversion elle-même ne génère aucun impôt. Vos investissements restent en place et continuent de croître à l'abri de l'impôt tant qu'ils sont dans le FERR.</p>
+      <p>La différence fondamentale : chaque année, vous devez retirer un montant <strong style="color:var(--text)">MINIMUM</strong> basé sur votre âge et la valeur de votre FERR au 1er janvier. Ce minimum augmente avec l'âge — le gouvernement s'assure ainsi que vous dépensez vos économies (et payez de l'impôt dessus) de votre vivant.</p>
+    </div>
+
+    <h3 class="reveal" style="font-size:16px;font-weight:700;margin:32px 0 16px;">Tableau des retraits minimums</h3>
+    <div class="tbl-wrap reveal">
+      <table>
+        <thead><tr><th>Âge</th><th>Min. %</th><th>Âge</th><th>Min. %</th><th>Âge</th><th>Min. %</th><th>Âge</th><th>Min. %</th></tr></thead>
+        <tbody>
+          <tr><td><strong>65</strong></td><td>4,00 %</td><td><strong>72</strong></td><td>5,40 %</td><td><strong>80</strong></td><td>6,82 %</td><td><strong>90</strong></td><td>13,62 %</td></tr>
+          <tr><td><strong>67</strong></td><td>4,35 %</td><td><strong>74</strong></td><td>5,67 %</td><td><strong>83</strong></td><td>7,71 %</td><td><strong>93</strong></td><td>17,92 %</td></tr>
+          <tr><td><strong>69</strong></td><td>4,76 %</td><td><strong>76</strong></td><td>5,98 %</td><td><strong>85</strong></td><td>8,51 %</td><td><strong>95+</strong></td><td class="badge-warn">20,00 %</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="reveal" style="font-size:16px;font-weight:700;margin:32px 0 16px;">Les stratégies intelligentes</h3>
+    <div class="order-steps stagger">
+      <div class="order-step">
+        <div class="order-step-num" style="background:linear-gradient(135deg,#d97706,#f59e0b);">1</div>
+        <div class="order-step-content">
+          <h3>Utiliser l'âge du conjoint le plus jeune</h3>
+          <p>Si votre conjoint est plus jeune, basez le calcul du retrait minimum sur <strong>SON âge</strong> plutôt que le vôtre. Cela réduit le montant minimum et laisse plus d'argent croître à l'abri de l'impôt. Cette élection doit être faite à l'ouverture du FERR.</p>
+        </div>
+      </div>
+      <div class="order-step">
+        <div class="order-step-num" style="background:linear-gradient(135deg,#059669,#10b981);">2</div>
+        <div class="order-step-content">
+          <h3>Réinvestir le surplus dans le CELI</h3>
+          <p>Si vous n'avez pas besoin de tout votre retrait minimum pour vivre, déposez l'excédent dans votre CELI. L'argent migre d'un environnement « impôt reporté » (FERR) vers un environnement « impôt libre » (CELI). Les gains futurs ne seront plus jamais imposés.</p>
+        </div>
+      </div>
+      <div class="order-step">
+        <div class="order-step-num" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">3</div>
+        <div class="order-step-content">
+          <h3>Convertir tôt (avant 71 ans) si nécessaire</h3>
+          <p>Vous pouvez convertir une partie de votre REER en FERR dès <strong>65 ans</strong>. Les retraits d'un FERR après 65 ans sont admissibles au <strong>crédit d'impôt pour revenu de pension</strong> (jusqu'à 2 000 $ de crédit fédéral) et au fractionnement du revenu de pension avec votre conjoint.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule reveal">
+      <div class="label">💡 FERR et impôts : ce qu'il faut savoir</div>
+      <p>Chaque dollar retiré de votre FERR est imposé comme un revenu d'emploi — pas de traitement de gain en capital ni de crédit de dividende. C'est pourquoi il est souvent préférable de détenir des <strong>actions à dividendes dans un CELI</strong> ou un compte non enregistré, et de garder les placements à revenu fixe (obligations, CPG) dans le FERR.</p>
+    </div>
+
+    <div class="warn reveal">
+      <div class="label">⚠️ L'impact sur la Sécurité de la vieillesse (SV)</div>
+      <p>Si votre revenu total dépasse environ <strong>90 997 $ (seuil 2025)</strong>, votre pension de la Sécurité de la vieillesse commence à être récupérée à raison de 15 cents par dollar excédentaire. Un REER/FERR trop garni peut vous coûter votre SV. C'est un argument de plus pour équilibrer entre REER et CELI pendant votre vie active, et pour considérer des retraits stratégiques du REER AVANT la conversion obligatoire à 71 ans.</p>
+    </div>
+
+    <div class="calc-box reveal">
+      <div class="calc-title">🧮 Simulateur FERR</div>
+      <div class="calc-subtitle">Estimez votre retrait minimum annuel et le revenu sur 20 ans</div>
+      <div class="calc-row">
+        <label>Valeur du FERR au 1er janvier : <span class="cval" id="ferrValVal">500 000 $</span></label>
+        <input type="range" min="50000" max="2000000" step="25000" value="500000" id="ferrValInput">
+      </div>
+      <div class="calc-row">
+        <label>Votre âge actuel : <span class="cval" id="ferrAgeVal">72 ans</span></label>
+        <input type="range" min="65" max="90" step="1" value="72" id="ferrAgeInput">
+      </div>
+      <div class="calc-row">
+        <label>Rendement annuel estimé : <span class="cval" id="ferrRateVal">5 %</span></label>
+        <input type="range" min="1" max="10" step="0.5" value="5" id="ferrRateInput">
+      </div>
+      <div class="calc-result">
+        <div class="rg">
+          <div class="ri"><div class="rv" id="ferrMinRetrait">—</div><div class="rl">Retrait min. cette année</div></div>
+          <div class="ri"><div class="rv" id="ferrTotalRetrait">—</div><div class="rl">Total retiré sur 20 ans</div></div>
+        </div>
+        <div class="sim-diff" style="background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.3);">
+          <div class="sim-diff-lbl">Valeur estimée du FERR dans 20 ans</div>
+          <div class="sim-diff-val" id="ferrFinalVal" style="color:#d97706;">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARATIF -->
+<section id="s4" class="content-section scroll-target">
+  <div class="inner">
+    <div class="section-header">
+      <div class="section-num reveal">04</div>
+      <div class="section-head-text reveal">
+        <div class="section-label">Vue d'ensemble</div>
+        <h2>Tableau comparatif</h2>
+        <div class="en">REEE · REEI · FERR</div>
+      </div>
+    </div>
+    <div class="tbl-wrap reveal">
+      <table>
+        <thead><tr><th>Caractéristique</th><th>REEE</th><th>REEI</th><th>FERR</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Objectif</strong></td><td>Études de l'enfant</td><td>Sécurité d'un proche handicapé</td><td>Revenu de retraite</td></tr>
+          <tr><td><strong>Admissibilité</strong></td><td>Tout résident canadien</td><td>Détenteur du CIPH (T2201)</td><td>Détenteur d'un REER</td></tr>
+          <tr><td><strong>Plafond à vie</strong></td><td>50 000 $ / enfant</td><td>200 000 $</td><td>Transféré du REER</td></tr>
+          <tr><td><strong>Subventions gouv.</strong></td><td class="badge-win">750 $/an (SCEE + IQEE)</td><td class="badge-win">Jusqu'à 4 500 $/an</td><td class="badge-lose">Aucune</td></tr>
+          <tr><td><strong>Subv. sans cotiser</strong></td><td class="badge-warn">Oui (BEC: 500 $/an)</td><td class="badge-win">Oui (BCEI: 1 000 $/an)</td><td class="badge-lose">Non</td></tr>
+          <tr><td><strong>Retrait minimum</strong></td><td class="badge-win">Non</td><td class="badge-win">Non (après 10 ans)</td><td class="badge-lose">Oui (obligatoire)</td></tr>
+          <tr><td><strong>Imposition retraits</strong></td><td>Mains de l'étudiant</td><td>Mains du bénéficiaire</td><td class="badge-warn">Revenu imposable total</td></tr>
+          <tr><td><strong>Durée max.</strong></td><td>36 ans</td><td>Vie du bénéficiaire</td><td>Vie du détenteur</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="principle reveal">
+      <div class="label">💡 Le message commun</div>
+      <p>Ces trois comptes couvrent les moments les plus importants d'une vie financière. Et ils partagent tous le même message : <strong>le temps est votre allié.</strong> Chaque année où un REEE n'est pas ouvert est une année de subventions perdues. Chaque année où un REEI n'est pas activé est une année de bons gouvernementaux qui ne reviendront pas. Et chaque année où la conversion REER-FERR n'est pas planifiée stratégiquement est une année où l'impôt gruge plus qu'il ne devrait.</p>
+    </div>
+  </div>
+</section>
+
+<!-- JEUX -->
+<section id="jeux" class="content-section scroll-target" style="background:var(--bg2);">
+  <div class="inner">
+    <div class="section-label reveal">🎮 Interactif</div>
+    <h2 class="reveal" style="font-family:'Playfair Display',serif;font-size:clamp(24px,5vw,36px);font-weight:800;margin-bottom:8px;">Testez vos connaissances</h2>
+    <p class="reveal" style="color:var(--text2);margin-bottom:32px;font-size:13px;">Deux activités pour consolider ce que vous venez d'apprendre.</p>
+
+    <div class="quiz-box reveal">
+      <div class="quiz-title">🧠 Quiz — Comptes spécialisés</div>
+      <div class="quiz-progress" id="qProg"></div>
+      <div id="qBody"></div>
+    </div>
+
+    <h3 class="reveal" style="font-size:15px;font-weight:700;color:var(--text);margin:40px 0 6px;">🃏 Cartes-mémoire</h3>
+    <p class="reveal" style="font-size:12px;color:var(--muted);margin-bottom:16px;">Tapez sur une carte pour voir la définition</p>
+    <div class="flip-grid reveal" id="flipGrid"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-logo">PasseGo</div>
+  <p>Boîte à outils de l'investisseur · Vol. 2 · 21 février 2026</p>
+  <p style="margin-top:6px;font-size:11px;color:var(--muted);">🚀 Prochaine étape : choisir les bons investissements (FNB, actions, obligations) à l'intérieur de chaque compte, et comment le cadre RegimeRadar vous aide à naviguer les cycles du marché.</p>
+  <div class="disclaimer">⚠️ Ce document est à des fins éducatives uniquement. Ce n'est pas du conseil financier. Consultez un professionnel qualifié. Les plafonds et seuils de revenus sont sujets à indexation annuelle — vérifiez sur canada.ca.</div>
+</footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', function() {
+  var pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+// Mobile menu
+document.getElementById('menuBtn').addEventListener('click', function() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+});
+document.querySelectorAll('#mobileMenu a').forEach(function(a) {
+  a.addEventListener('click', function() { document.getElementById('mobileMenu').classList.remove('open'); });
+});
+
+// Reveal animations
+var revealObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal, .stagger').forEach(function(el) { revealObs.observe(el); });
+
+function fmt(n) {
+  if (n >= 1000000) return (n / 1000000).toFixed(2).replace(/\.?0+$/, '') + ' M$';
+  return Math.round(n).toLocaleString('fr-CA') + ' $';
+}
+
+// REEE Calculateur
+function runREEE() {
+  var cont = parseFloat(document.getElementById('reeeContInput').value);
+  var age  = parseInt(document.getElementById('reeeAgeInput').value);
+  var r    = parseFloat(document.getElementById('reeeRateInput').value) / 100;
+  var yrs  = Math.max(0, 18 - age);
+  document.getElementById('reeeContVal').textContent  = cont.toLocaleString('fr-CA') + ' $';
+  document.getElementById('reeeAgeVal').textContent   = age + (age <= 1 ? ' an' : ' ans');
+  document.getElementById('reeeRateVal').textContent  = document.getElementById('reeeRateInput').value + ' %';
+  var v = 0, totalSubv = 0, totalCont = 0;
+  for (var i = 0; i < yrs; i++) {
+    var subv = Math.min(cont, 2500) * 0.30; // 20% SCEE + 10% IQEE
+    if (cont > 2500) subv += Math.min(cont - 2500, 2500) * 0; // no subv above 2500
+    totalSubv += subv;
+    totalCont += cont;
+    v = (v + cont + subv) * (1 + r);
+  }
+  document.getElementById('reeeTotal').textContent   = fmt(v);
+  document.getElementById('reeeSubv').textContent    = fmt(totalSubv);
+  document.getElementById('reeeContTot').textContent = fmt(totalCont);
+}
+document.getElementById('reeeContInput').addEventListener('input', runREEE);
+document.getElementById('reeeAgeInput').addEventListener('input', runREEE);
+document.getElementById('reeeRateInput').addEventListener('input', runREEE);
+runREEE();
+
+// FERR taux minimums
+var ferrTaux = {65:4.00,66:4.17,67:4.35,68:4.55,69:4.76,70:5.00,71:5.28,72:5.40,73:5.53,74:5.67,75:5.82,76:5.98,77:6.17,78:6.36,79:6.58,80:6.82,81:7.08,82:7.38,83:7.71,84:8.08,85:8.51,86:8.99,87:9.55,88:10.21,89:10.99,90:13.62,91:14.73,92:16.34,93:17.92,94:19.71,95:20.00};
+function getMinPct(age) {
+  if (age >= 95) return 20.00;
+  return ferrTaux[age] || 5.40;
+}
+
+function runFERR() {
+  var val  = parseFloat(document.getElementById('ferrValInput').value);
+  var age  = parseInt(document.getElementById('ferrAgeInput').value);
+  var r    = parseFloat(document.getElementById('ferrRateInput').value) / 100;
+  document.getElementById('ferrValVal').textContent  = fmt(val);
+  document.getElementById('ferrAgeVal').textContent  = age + ' ans';
+  document.getElementById('ferrRateVal').textContent = document.getElementById('ferrRateInput').value + ' %';
+  var minRetrait = val * getMinPct(age) / 100;
+  document.getElementById('ferrMinRetrait').textContent = fmt(minRetrait);
+  // Simulate 20 years
+  var v = val, totalRetrait = 0;
+  for (var i = 0; i < 20; i++) {
+    var a = Math.min(age + i, 95);
+    var retrait = v * getMinPct(a) / 100;
+    totalRetrait += retrait;
+    v = (v - retrait) * (1 + r);
+  }
+  document.getElementById('ferrTotalRetrait').textContent = fmt(totalRetrait);
+  document.getElementById('ferrFinalVal').textContent     = fmt(Math.max(0, v));
+}
+document.getElementById('ferrValInput').addEventListener('input', runFERR);
+document.getElementById('ferrAgeInput').addEventListener('input', runFERR);
+document.getElementById('ferrRateInput').addEventListener('input', runFERR);
+runFERR();
+
+// Quiz
+var QS = [
+  {q:"Vous cotisez 2 500 $ par année au REEE de votre enfant au Québec. Quelle est la subvention gouvernementale totale reçue annuellement?", opts:["250 $ (IQEE seulement)","500 $ (SCEE seulement)","750 $ (SCEE 500 $ + IQEE 250 $)","1 000 $"], ans:2, exp:"Le fédéral verse 20 % (500 $) via la SCEE, et le Québec ajoute 10 % (250 $) via l'IQEE, pour un total de 750 $ par année sur une cotisation de 2 500 $."},
+  {q:"Quel est le rendement garanti instantané sur les 2 500 premiers dollars cotisés au REEE au Québec?", opts:["10 %","20 %","25 %","30 %"], ans:3, exp:"La combinaison SCEE (20 %) + IQEE (10 %) représente un rendement instantané de 30 % avant même que l'argent soit investi."},
+  {q:"Pour être admissible au REEI, le bénéficiaire doit obligatoirement :", opts:["Avoir moins de 18 ans","Détenir le crédit d'impôt pour personnes handicapées (CIPH)","Avoir un revenu sous 30 000 $","Être né au Canada"], ans:1, exp:"L'admissibilité au REEI est conditionnelle à l'obtention du CIPH (formulaire T2201 approuvé par l'ARC), peu importe l'âge ou le revenu."},
+  {q:"Le Bon canadien pour l'épargne-invalidité (BCEI) est unique parce que :", opts:["Il double vos cotisations","Le gouvernement le dépose sans que vous ayez à cotiser","Il n'est pas imposable","Il s'applique automatiquement à tous les handicaps"], ans:1, exp:"Le BCEI est extraordinaire : le gouvernement dépose jusqu'à 1 000 $ par année dans le REEI même si vous ne cotisez rien, tant que le revenu familial est sous ~57 000 $."},
+  {q:"Vous avez 71 ans et n'avez pas encore converti votre REER. Que doit-il se passer au plus tard le 31 décembre?", opts:["Vous devez retirer tout votre REER","Vous devez le transférer en CPG","Vous devez le convertir en FERR (ou rente)","Rien — c'est optionnel"], ans:2, exp:"La loi exige la conversion du REER en FERR (ou rente) au plus tard le 31 décembre de l'année des 71 ans. Ne pas le faire force un retrait total immédiatement imposable."},
+  {q:"Quelle est la stratégie optimale pour un retraité de 75 ans dont le retrait minimum FERR dépasse ses besoins de revenu?", opts:["Laisser l'excédent dans un compte bancaire","Cotiser l'excédent au REER","Transférer l'excédent au CELI","Le réinvestir dans le FERR"], ans:2, exp:"Transférer l'excédent du FERR vers le CELI est optimal : l'argent migre d'un environnement à impôt reporté vers un environnement à impôt zéro. Les gains futurs dans le CELI ne seront jamais imposés."},
+  {q:"La règle des 10 ans du REEI signifie que :", opts:["Le compte ferme automatiquement après 10 ans","Les retraits dans les 10 ans suivant la dernière subvention obligent à rembourser les subventions","Vous devez attendre 10 ans avant d'ouvrir un REEI","Vous pouvez recevoir des subventions pendant 10 ans seulement"], ans:1, exp:"La règle de l'assistance proportionnelle impose le remboursement des subventions et bons reçus dans les 10 années précédant un retrait. Après ce délai, les retraits sont libres."}
+];
+var qi = 0, qs = 0, qan = false;
+function qProg() {
+  var h = '';
+  for (var i = 0; i < QS.length; i++) h += '<div class="qdot' + (i === qi ? ' cur' : i < qi ? ' done' : '') + '"></div>';
+  document.getElementById('qProg').innerHTML = h;
+}
+function qRender() {
+  if (qi >= QS.length) { qScore(); return; }
+  qan = false; qProg();
+  var q = QS[qi];
+  var opts = '';
+  for (var i = 0; i < q.opts.length; i++) opts += '<button class="quiz-opt" data-i="' + i + '">' + q.opts[i] + '</button>';
+  document.getElementById('qBody').innerHTML =
+    '<div class="quiz-question">' + q.q + '</div>' +
+    '<div class="quiz-options">' + opts + '</div>' +
+    '<div class="quiz-feedback" id="qFb"></div>' +
+    '<button class="quiz-next" id="qNext">Question suivante →</button>';
+  document.querySelectorAll('.quiz-opt').forEach(function(btn) {
+    btn.addEventListener('click', function() { qAnswer(parseInt(this.getAttribute('data-i'))); });
+  });
+  document.getElementById('qNext').addEventListener('click', function() { qi++; qRender(); });
+}
+function qAnswer(i) {
+  if (qan) return;
+  qan = true;
+  var q = QS[qi];
+  document.querySelectorAll('.quiz-opt').forEach(function(b) { b.disabled = true; });
+  document.querySelectorAll('.quiz-opt')[q.ans].classList.add('correct');
+  if (i === q.ans) {
+    qs++;
+    document.getElementById('qFb').className = 'quiz-feedback show ok';
+    document.getElementById('qFb').innerHTML = '✅ <strong>Correct!</strong> ' + q.exp;
+  } else {
+    document.querySelectorAll('.quiz-opt')[i].classList.add('wrong');
+    document.getElementById('qFb').className = 'quiz-feedback show ko';
+    document.getElementById('qFb').innerHTML = '❌ <strong>Pas tout à fait.</strong> ' + q.exp;
+  }
+  document.getElementById('qNext').classList.add('show');
+}
+function qScore() {
+  var pct = Math.round(qs / QS.length * 100);
+  var msg = pct === 100 ? '🏆 Parfait! Vous maîtrisez les comptes spécialisés canadiens.'
+    : pct >= 70 ? '🎉 Excellent! Vous avez bien assimilé les concepts clés.'
+    : pct >= 50 ? '📚 Bon début! Relisez les sections que vous avez manquées.'
+    : '💡 Continuez à apprendre! Reprenez le guide depuis le début.';
+  document.getElementById('qProg').innerHTML = '';
+  document.getElementById('qBody').innerHTML =
+    '<div class="score-wrap"><div class="score-num">' + qs + '/' + QS.length + '</div>' +
+    '<div class="score-lbl">' + pct + '% de bonnes réponses</div>' +
+    '<div class="score-msg">' + msg + '</div>' +
+    '<button class="quiz-restart" id="qRestart">🔄 Recommencer</button></div>';
+  document.getElementById('qRestart').addEventListener('click', function() { qi = 0; qs = 0; qRender(); });
+}
+qRender();
+
+// Flip cards
+var FC = [
+  {e:'🎓',t:'REEE',d:"Cotisez 2 500 $/an par enfant pour capter le max de subventions. SCEE fédérale (20 %) + IQEE Québec (10 %) = 30 % garanti."},
+  {e:'🇨🇦',t:'SCEE',d:"Subvention canadienne pour l'épargne-études. 20 % sur 2 500 $. Maximum 500 $/an. Plafond à vie : 7 200 $."},
+  {e:'⚜️',t:'IQEE',d:"Incitatif québécois à l'épargne-études. 10 % sur 2 500 $. Maximum 250 $/an. Spécifique aux résidents du Québec."},
+  {e:'❤️',t:'REEI',d:"Pour les détenteurs du CIPH. Jusqu'à 300 % de jumelage + bons sans cotisation. Ne pas ouvrir = laisser de l'argent sur la table."},
+  {e:'🎁',t:'BCEI',d:"Bon canadien pour l'épargne-invalidité. 1 000 $/an SANS cotisation requise. Revenu familial &lt; ~57 000 $. À vie : 20 000 $."},
+  {e:'🏦',t:'FERR',d:"Suite du REER. Conversion obligatoire à 71 ans. Retrait minimum annuel augmente avec l'âge. Tout retrait = revenu imposable."},
+];
+var fg = document.getElementById('flipGrid');
+FC.forEach(function(c) {
+  var d = document.createElement('div');
+  d.className = 'flip-card';
+  d.innerHTML = '<div class="flip-inner"><div class="flip-front"><div class="fe">' + c.e + '</div><div class="ft">' + c.t + '</div></div><div class="flip-back"><div class="fd">' + c.d + '</div></div></div>';
+  d.addEventListener('click', function() { this.classList.toggle('flipped'); });
+  fg.appendChild(d);
+});
+</script>
+</body>
+</html>
